@@ -10,19 +10,22 @@ function getPuzzle(angle) {
 }
 
 function printPuzzle() {
-  getPuzzle('mix').then((data) => {
+  return getPuzzle('mix').then((data) => {
     const puzzle = data.puzzles[0];
     console.log('PGN:', puzzle.game.pgn);
   });
 }
 
-function puzzleLoop() {
+async function puzzleLoop() {
+  await printPuzzle();
+
   let result = prompt('Did you solved the puzzle ?');
 
   if (result === 'failed') {
-    printPuzzle();
-    puzzleLoop();
+    await puzzleLoop();
   } else if (result === 'solved') {
     console.log('well done');
   }
 }
+
+puzzleLoop();
