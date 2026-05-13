@@ -5,20 +5,21 @@ module.exports = {
   mode: "development",
   entry: "./src/index.js",
   output: {
-    filename: "main.js",
+    filename: "[name].[contenthash].js",
     path: path.resolve(__dirname, "dist"),
     clean: true,
   },
   devtool: "eval-source-map",
   devServer: {
     watchFiles: ["./src/template.html"],
+    hot: true,
+    open: true,
   },
   plugins: [
     new HtmlWebpackPlugin({
       template: "./src/template.html",
     }),
   ],
-
   module: {
     rules: [
       {
@@ -34,5 +35,18 @@ module.exports = {
         type: "asset/resource",
       },
     ],
+  },
+  optimization: {
+    moduleIds: "deterministic",
+    runtimeChunk: "single",
+    splitChunks: {
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          chunks: "all",
+        },
+      },
+    },
   },
 };
