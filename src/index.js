@@ -9,16 +9,20 @@ function getPuzzle(angle) {
   });
 }
 
-getPuzzle('mix').then((data) => {
-  console.log(data.puzzles[0]);
-});
+function printPuzzle() {
+  getPuzzle('mix').then((data) => {
+    const puzzle = data.puzzles[0];
+    console.log('PGN:', puzzle.game.pgn);
+  });
+}
 
-let result = '';
+function puzzleLoop() {
+  let result = prompt('Did you solved the puzzle ?');
 
-while (result !== 'yes') {
-  result = prompt('Did you solved the puzzle mentally?');
-
-  if (result === null) {
-    alert('You must answer to proceed');
+  if (result === 'failed') {
+    printPuzzle();
+    puzzleLoop();
+  } else if (result === 'solved') {
+    console.log('well done');
   }
 }
