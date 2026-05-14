@@ -1,3 +1,10 @@
+//
+
+const pgn = document.getElementById('pgn');
+const solution = document.getElementById('solution');
+
+//
+
 async function getPuzzle(angle) {
   const nb = 2;
 
@@ -19,10 +26,14 @@ async function getPuzzle(angle) {
       let solved = false;
       while (solved === false) {
         console.log(puzzle);
+        console.log(`PGN: ${puzzle.game.pgn}`);
+        pgn.innerHTML = `PGN: ${puzzle.game.pgn}`;
         let result = prompt('Did you solve the puzzle? (type "solved" when done)');
 
         if (result === 'solved') {
           solved = true;
+          console.log(`Solution: ${puzzle.puzzle.solution}`);
+          solution.innerHTML = `Solution: ${puzzle.puzzle.solution}`;
         }
         await new Promise((resolve) => setTimeout(resolve, 0));
       }
