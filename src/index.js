@@ -9,27 +9,34 @@ async function getPuzzle(angle) {
   });
 }
 
-let batchArray = await getPuzzle('mix');
-let counter = 0;
+(async () => {
+  let batchData = await getPuzzle('mix');
+  let batchArray = batchData.puzzles;
+  let counter = 0;
 
-async function printPuzzle() {
-  for (const puzzle of batchArray) {
-    let solved = false;
-    while (solved === false) {
-      console.log(puzzle);
-      let result = prompt('Did you solved the puzzle ?');
+  async function printPuzzle() {
+    for (const puzzle of batchArray) {
+      let solved = false;
+      while (solved === false) {
+        console.log(puzzle);
+        let result = prompt('Did you solve the puzzle? (type "solved" when done)');
 
-      if (result === 'solved') {
-        solved = true;
+        if (result === 'solved') {
+          solved = true;
+        }
+        await new Promise((resolve) => setTimeout(resolve, 0));
       }
+    }
+
+    counter++;
+
+    if (counter === 10) {
+      let batchData = await getPuzzle('mix');
+      let batchArray = batchData.puzzles;
+      counter = 0;
+      await printPuzzle();
     }
   }
 
-  counter++;
-
-  if (counter === 10) {
-    batchArray = await getPuzzle('mix');
-    counter = 0;
-    printPuzzle();
-  }
-}
+  await printPuzzle();
+})();
