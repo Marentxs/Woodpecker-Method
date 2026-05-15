@@ -1,9 +1,21 @@
-//
-
-const pgn = document.getElementById('pgn');
-const solution = document.getElementById('solution');
+import { Chess } from 'chess.js';
+const chess = new Chess();
 
 //
+
+const pgnUI = document.getElementById('pgn');
+const solutionUI = document.getElementById('solution');
+
+//
+
+function pgnHelper(pgn) {
+  chess.reset();
+  const moves = pgn.split(' ');
+
+  for (const move of moves) {
+    const result = chess.move(move);
+  }
+}
 
 async function getPuzzle(angle) {
   const nb = 2;
@@ -26,14 +38,16 @@ async function getPuzzle(angle) {
       let solved = false;
       while (solved === false) {
         console.log(puzzle);
-        console.log(`PGN: ${puzzle.game.pgn}`);
-        pgn.innerHTML = `PGN: ${puzzle.game.pgn}`;
+        pgnUI.innerHTML = `PGN: ${puzzle.game.pgn}`;
+
+        pgnHelper(puzzle.game.pgn);
+        console.log(chess.ascii());
         let result = prompt('Did you solve the puzzle? (type "solved" when done)');
 
         if (result === 'solved') {
           solved = true;
           console.log(`Solution: ${puzzle.puzzle.solution}`);
-          solution.innerHTML = `Solution: ${puzzle.puzzle.solution}`;
+          solutionUI.innerHTML = `Solution: ${puzzle.puzzle.solution}`;
         }
         await new Promise((resolve) => setTimeout(resolve, 0));
       }
@@ -51,3 +65,5 @@ async function getPuzzle(angle) {
 
   await printPuzzle();
 })();
+
+//
