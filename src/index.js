@@ -18,7 +18,7 @@ function pgnHelper(pgn) {
 }
 
 async function getPuzzle(angle) {
-  const nb = 2;
+  const nb = 1;
 
   return fetch(`https://lichess.org/api/puzzle/batch/${angle}?nb=${nb}`).then((response) => {
     if (!response.ok) {
@@ -30,34 +30,44 @@ async function getPuzzle(angle) {
 
 (async () => {
   let batchData = await getPuzzle('mix');
-  let batchArray = batchData.puzzles;
+  let batchPuzzles = batchData.puzzles;
   let counter = 0;
 
   async function printPuzzle() {
-    for (const puzzle of batchArray) {
-      let solved = false;
-      while (solved === false) {
-        console.log(puzzle);
+    for (const puzzle of batchPuzzles) {
+      let currentMoveIndex = 0;
+      let ownMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 === 0);
+      let opponentMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 !== 0);
+
+      pgnHelper(puzzle.game.pgn);
+
+      while (currentMoveIndex < ownMoves.length) {
+        console.log(chess.ascii());
         pgnUI.innerHTML = `PGN: ${puzzle.game.pgn}`;
 
-        pgnHelper(puzzle.game.pgn);
-        console.log(chess.ascii());
-        let result = prompt('Did you solve the puzzle? (type "solved" when done)');
+        let input = prompt(`Enter your move (e.g.,"b3d5")`);
 
-        if (result === 'solved') {
-          solved = true;
-          console.log(`Solution: ${puzzle.puzzle.solution}`);
-          solutionUI.innerHTML = `Solution: ${puzzle.puzzle.solution}`;
+        if (input === ownMoves[currentMoveIndex]) {
+          chess.move(ownMoves[currentMoveIndex]);
+          if (opponentMoves[currentMoveIndex]) {
+            chess.move(opponentMoves[currentMoveIndex]);
+          }
+          currentMoveIndex++;
+
+          if (currentMoveIndex === ownMoves.length) {
+            console.log('Puzzle solved');
+          }
+        } else {
+          console.log('Wrong move, try again');
         }
-        await new Promise((resolve) => setTimeout(resolve, 0));
       }
     }
 
     counter++;
 
     if (counter === 10) {
-      let batchData = await getPuzzle('mix');
-      let batchArray = batchData.puzzles;
+      batchData = await getPuzzle('mix');
+      batchPuzzles = batchData.puzzles;
       counter = 0;
       await printPuzzle();
     }
