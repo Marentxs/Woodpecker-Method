@@ -1,6 +1,24 @@
 import { Chess } from 'chess.js';
 const chess = new Chess();
 
+import { Chessboard } from '@alepot55/chessboardjs';
+import '@alepot55/chessboardjs/dist/chessboard.css';
+
+const config = {
+  draggable: true,
+  position: chess.fen(),
+  onDragStart: (source, piece) => {
+    /* your validation logic */
+  },
+  onDrop: (source, target) => {
+    /* check move against solution */
+  },
+};
+
+const board = Chessboard('chessboard', config);
+
+//
+
 //
 
 const pgnUI = document.getElementById('pgn');
@@ -40,27 +58,8 @@ async function getPuzzle(angle) {
       let opponentMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 !== 0);
 
       pgnHelper(puzzle.game.pgn);
-
-      while (currentMoveIndex < ownMoves.length) {
-        console.log(chess.ascii());
-        pgnUI.innerHTML = `PGN: ${puzzle.game.pgn}`;
-
-        let input = prompt(`Enter your move (e.g.,"b3d5")`);
-
-        if (input === ownMoves[currentMoveIndex]) {
-          chess.move(ownMoves[currentMoveIndex]);
-          if (opponentMoves[currentMoveIndex]) {
-            chess.move(opponentMoves[currentMoveIndex]);
-          }
-          currentMoveIndex++;
-
-          if (currentMoveIndex === ownMoves.length) {
-            console.log('Puzzle solved');
-          }
-        } else {
-          console.log('Wrong move, try again');
-        }
-      }
+      const currentFEN = chess.fen();
+      board.setPosition(currentFEN);
     }
 
     counter++;
