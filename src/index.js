@@ -66,6 +66,7 @@ const config = {
 
     if (opponentMoves[currentMoveIndex]) {
       chess.move(opponentMoves[currentMoveIndex]);
+      board.setPosition(chess.fen());
     }
 
     currentMoveIndex++;
