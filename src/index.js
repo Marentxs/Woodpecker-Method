@@ -1,26 +1,8 @@
 import { Chess } from 'chess.js';
-const chess = new Chess();
-
 import { Chessboard } from '@alepot55/chessboardjs';
 import '@alepot55/chessboardjs/dist/chessboard.css';
 
-const config = {
-  draggable: true,
-  position: chess.fen(),
-  onDragStart: (source, piece) => {
-    /* your validation logic */
-  },
-  onDrop: (source, target) => {
-    /* check move against solution */
-  },
-};
-
-const board = Chessboard('chessboard', config);
-
-//
-
-//
-
+const chess = new Chess();
 const pgnUI = document.getElementById('pgn');
 const solutionUI = document.getElementById('solution');
 
@@ -46,33 +28,55 @@ async function getPuzzle(angle) {
   });
 }
 
-(async () => {
-  let batchData = await getPuzzle('mix');
-  let batchPuzzles = batchData.puzzles;
-  let counter = 0;
+// Variables for logic
 
-  async function printPuzzle() {
-    for (const puzzle of batchPuzzles) {
-      let currentMoveIndex = 0;
-      let ownMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 === 0);
-      let opponentMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 !== 0);
+let batchData = await getPuzzle('mix');
+let batchPuzzles = batchData.puzzles;
+let puzzle = batchPuzzles[0];
 
-      pgnHelper(puzzle.game.pgn);
-      const currentFEN = chess.fen();
-      board.setPosition(currentFEN);
+let ownMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 === 0);
+let opponentMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 !== 0);
+let currentMoveIndex = 0;
+
+// Call pgnHelper to load position into chess
+
+pgnHelper(puzzle.game.pgn);
+
+// Build config const
+
+const config = {
+  draggable: true,
+  position: chess.fen(),
+  onMove: (move) => {
+    const moveString = move.from.id + move.to.id;
+
+    if (moveString === ownMoves[currentMoveIndex]) {
+      console.log('Correct move');
+      return true;
+    } else {
+      console.log(ownMoves[currentMoveIndex]);
+      console.log(moveString);
+      console.log('Wrong move');
+      return false;
+    }
+  },
+
+  onMoveEnd: (move) => {
+    chess.move(ownMoves[currentMoveIndex]);
+
+    if (opponentMoves[currentMoveIndex]) {
+      chess.move(opponentMoves[currentMoveIndex]);
     }
 
-    counter++;
+    currentMoveIndex++;
 
-    if (counter === 10) {
-      batchData = await getPuzzle('mix');
-      batchPuzzles = batchData.puzzles;
-      counter = 0;
-      await printPuzzle();
+    if (currentMoveIndex === ownMoves.length) {
+      console.log('Puzzle solved');
+      board.destroy();
     }
-  }
+  },
+};
 
-  await printPuzzle();
-})();
+// Create board with that config
 
-//
+const board = Chessboard('chessboard', config);
