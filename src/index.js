@@ -18,7 +18,7 @@ function pgnHelper(pgn) {
 }
 
 async function getPuzzle(angle) {
-  const nb = 1;
+  const nb = 2;
 
   return fetch(`https://lichess.org/api/puzzle/batch/${angle}?nb=${nb}`).then((response) => {
     if (!response.ok) {
@@ -32,52 +32,64 @@ async function getPuzzle(angle) {
 
 let batchData = await getPuzzle('mix');
 let batchPuzzles = batchData.puzzles;
-let puzzle = batchPuzzles[0];
+let currentPuzzleIndex = 0;
 
-let ownMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 === 0);
-let opponentMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 !== 0);
-let currentMoveIndex = 0;
+//
 
-// Call pgnHelper to load position into chess
+function loadPuzzle(index) {
+  if (index >= batchPuzzles.length) {
+    console.log('All puzzles done');
+    return;
+  }
 
-pgnHelper(puzzle.game.pgn);
+  let puzzle = batchPuzzles[index];
 
-// Build config const
+  let ownMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 === 0);
+  let opponentMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 !== 0);
+  let currentMoveIndex = 0;
 
-const config = {
-  draggable: true,
-  position: chess.fen(),
-  onMove: (move) => {
-    const moveString = move.from.id + move.to.id;
+  pgnHelper(puzzle.game.pgn);
 
-    if (moveString === ownMoves[currentMoveIndex]) {
-      console.log('Correct move');
-      return true;
-    } else {
-      console.log(ownMoves[currentMoveIndex]);
-      console.log(moveString);
-      console.log('Wrong move');
-      return false;
-    }
-  },
+  const config = {
+    draggable: true,
+    position: chess.fen(),
+    onMove: (move) => {
+      const moveString = move.from.id + move.to.id;
 
-  onMoveEnd: (move) => {
-    chess.move(ownMoves[currentMoveIndex]);
+      if (moveString === ownMoves[currentMoveIndex]) {
+        console.log('Correct move');
+        return true;
+      } else {
+        console.log(ownMoves[currentMoveIndex]);
+        console.log(moveString);
+        console.log('Wrong move');
+        return false;
+      }
+    },
 
-    if (opponentMoves[currentMoveIndex]) {
-      chess.move(opponentMoves[currentMoveIndex]);
-      board.setPosition(chess.fen());
-    }
+    onMoveEnd: (move) => {
+      chess.move(ownMoves[currentMoveIndex]);
 
-    currentMoveIndex++;
+      if (opponentMoves[currentMoveIndex]) {
+        chess.move(opponentMoves[currentMoveIndex]);
+        board.setPosition(chess.fen());
+      }
 
-    if (currentMoveIndex === ownMoves.length) {
-      console.log('Puzzle solved');
-      board.destroy();
-    }
-  },
-};
+      currentMoveIndex++;
 
-// Create board with that config
+      if (currentMoveIndex === ownMoves.length) {
+        console.log('Puzzle solved');
+        board.destroy();
+        loadPuzzle(index + 1);
+      }
+    },
+  };
 
-const board = Chessboard('chessboard', config);
+  // Create board with logic
+
+  const board = Chessboard('chessboard', config);
+}
+
+// Initialize from first puzzle
+
+loadPuzzle(0);
