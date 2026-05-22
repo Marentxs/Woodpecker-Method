@@ -32,13 +32,13 @@ async function getPuzzle(angle) {
 
 let batchData = await getPuzzle('mix');
 let batchPuzzles = batchData.puzzles;
-let currentPuzzleIndex = 0;
 
 //
 
 function loadPuzzle(index) {
   if (index >= batchPuzzles.length) {
-    console.log('All puzzles done');
+    console.log('Completed full batch, Starting again');
+    loadPuzzle(0);
     return;
   }
 
@@ -78,8 +78,6 @@ function loadPuzzle(index) {
       currentMoveIndex++;
 
       if (currentMoveIndex === ownMoves.length) {
-        console.log('Puzzle solved');
-        board.destroy();
         loadPuzzle(index + 1);
       }
     },
