@@ -9,7 +9,7 @@ const solutionUI = document.getElementById('solution');
 const numberOfPuzzles = 2;
 const numberOfRuns = 2;
 
-//
+// Make moves from pgn
 
 function pgnHelper(pgn) {
   chess.reset();
@@ -19,6 +19,8 @@ function pgnHelper(pgn) {
     const result = chess.move(move);
   }
 }
+
+// API endpoint
 
 async function getPuzzle(angle) {
   const nb = numberOfPuzzles;
@@ -49,6 +51,27 @@ async function solvePuzzle(angle) {
     }
     return response.json();
   });
+}
+
+async function getLowestTheme() {
+  const days = 30;
+
+  const response = await fetch(`https://lichess.org/api/puzzle/dashboard/${days}`, {
+    headers: { Authorization: `Bearer ${ACCESS_TOKEN}` },
+  });
+
+  const data = await response.json();
+  let lowestPerformance = Infinity;
+  let lowestTheme;
+
+  for (const [key, value] of Object.entries(data.themes)) {
+    let currentPerformance = value.results.performance;
+    if (currentPerformance < lowestPerformance) {
+      lowestPerformance = value.results.performance;
+      lowestTheme = value.theme;
+    }
+  }
+  return lowestTheme;
 }
 
 // Variables for logic
