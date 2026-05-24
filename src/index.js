@@ -6,6 +6,9 @@ const chess = new Chess();
 const pgnUI = document.getElementById('pgn');
 const solutionUI = document.getElementById('solution');
 
+const numberOfPuzzles = 2;
+const numberOfRuns = 2;
+
 //
 
 function pgnHelper(pgn) {
@@ -18,9 +21,29 @@ function pgnHelper(pgn) {
 }
 
 async function getPuzzle(angle) {
-  const nb = 2;
+  const nb = numberOfPuzzles;
 
   return fetch(`https://lichess.org/api/puzzle/batch/${angle}?nb=${nb}`).then((response) => {
+    if (!response.ok) {
+      throw new Error('Request failed');
+    }
+    return response.json();
+  });
+}
+
+async function solvePuzzle(angle) {
+  const nb = numberOfPuzzles;
+
+  return fetch(`https://lichess.org/api/puzzle/batch/${angle}?nb=${nb}`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${ACCESS_TOKEN}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      solutions: solutions,
+    }),
+  }).then((response) => {
     if (!response.ok) {
       throw new Error('Request failed');
     }
@@ -32,12 +55,21 @@ async function getPuzzle(angle) {
 
 let batchData = await getPuzzle('mix');
 let batchPuzzles = batchData.puzzles;
+let solvedRuns = 0;
+
+//
+
+function checkRuns(solvedRuns) {
+  if (solvedRuns === numberOfRuns) {
+  }
+}
 
 //
 
 function loadPuzzle(index) {
   if (index >= batchPuzzles.length) {
     console.log('Completed full batch, Starting again');
+    solvedRuns++;
     loadPuzzle(0);
     return;
   }
