@@ -1,6 +1,7 @@
 import { Chess } from 'chess.js';
 import { Chessboard } from '@alepot55/chessboardjs';
 import '@alepot55/chessboardjs/dist/chessboard.css';
+import { Auth } from './Login.js';
 
 const chess = new Chess();
 const pgnUI = document.getElementById('pgn');
@@ -19,6 +20,8 @@ function pgnHelper(pgn) {
     const result = chess.move(move);
   }
 }
+
+// Handle login and auth from lichess server
 
 // API endpoint
 
@@ -87,7 +90,7 @@ function checkRuns(solvedRuns) {
   }
 }
 
-//
+// Main game loop
 
 function loadPuzzle(index) {
   if (index >= batchPuzzles.length) {
