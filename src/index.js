@@ -1,7 +1,7 @@
 import { Chess } from 'chess.js';
 import { Chessboard } from '@alepot55/chessboardjs';
 import '@alepot55/chessboardjs/dist/chessboard.css';
-import { Auth } from './Login.js';
+import { Auth } from './modules/login.js';
 
 const chess = new Chess();
 const pgnUI = document.getElementById('pgn');
@@ -21,7 +21,38 @@ function pgnHelper(pgn) {
   }
 }
 
-// Handle login and auth from lichess server
+// Handle login and auth
+
+const auth = new Auth();
+const app = document.getElementById('app');
+
+auth.init().then(() => {
+  if (auth.me) {
+    showAuthenticated();
+  } else {
+    showUnauthenticated();
+  }
+});
+
+document.getElementById('loginBtn').addEventListener('click', async () => {
+  await auth.login();
+});
+
+document.getElementById('logoutBtn').addEventListener('click', async () => {
+  await auth.logout();
+});
+
+function showAuthenticated() {
+  document.getElementById('unauthenticated').style.display = 'none';
+  document.getElementById('authenticated').style.display = 'block';
+
+  // functions to fetch dashboard, get lowest, and generate puzzles
+}
+
+function showUnauthenticated() {
+  document.getElementById('unauthenticated').style.display = 'block';
+  document.getElementById('authenticated').style.display = 'none';
+}
 
 // API endpoint
 
