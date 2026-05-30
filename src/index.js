@@ -59,7 +59,7 @@ function showUnauthenticated() {
 async function getPuzzle(angle) {
   const nb = numberOfPuzzles;
 
-  return fetch(`https://lichess.org/api/puzzle/batch/${angle}?nb=${nb}`).then((response) => {
+  return auth.fetchResponse(`/api/puzzle/batch/${angle}?nb=${nb}`).then((response) => {
     if (!response.ok) {
       throw new Error('Request failed');
     }
@@ -90,9 +90,7 @@ async function solvePuzzle(angle) {
 async function getLowestTheme() {
   const days = 30;
 
-  const response = await fetch(`https://lichess.org/api/puzzle/dashboard/${days}`, {
-    headers: { Authorization: `Bearer ${ACCESS_TOKEN}` },
-  });
+  const response = await auth.fetchResponse(`/api/puzzle/dashboard/${days}`);
 
   const data = await response.json();
   let lowestPerformance = Infinity;
@@ -107,6 +105,8 @@ async function getLowestTheme() {
   }
   return lowestTheme;
 }
+
+lowestTheme = await getLowestTheme();
 
 // Variables for logic
 
