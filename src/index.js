@@ -70,21 +70,19 @@ async function getPuzzle(angle) {
 async function solvePuzzle(angle) {
   const nb = numberOfPuzzles;
 
-  return fetch(`https://lichess.org/api/puzzle/batch/${angle}?nb=${nb}`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${ACCESS_TOKEN}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      solutions: solutions,
-    }),
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error('Request failed');
-    }
-    return response.json();
-  });
+  return auth
+    .fetchResponse(`/api/puzzle/batch/${angle}?nb=${nb}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        solutions: solutions,
+      }),
+    })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Request failed');
+      }
+      return response.json();
+    });
 }
 
 async function getLowestTheme() {
@@ -113,6 +111,15 @@ lowestTheme = await getLowestTheme();
 let batchData = await getPuzzle('mix');
 let batchPuzzles = batchData.puzzles;
 let solvedRuns = 0;
+
+// Extract puzzle ids
+
+let puzzleIds = batchPuzzles.map((puzzle) => puzzle.puzzle.id);
+let puzzleObjects = puzzleIds.map((id) => ({
+  id: id,
+  win: true,
+  rated: true,
+}));
 
 //
 
