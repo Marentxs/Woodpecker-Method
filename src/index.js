@@ -108,9 +108,10 @@ lowestTheme = await getLowestTheme();
 
 // Variables for logic
 
-let batchData = await getPuzzle('mix');
+let batchData = await getPuzzle(lowestTheme);
 let batchPuzzles = batchData.puzzles;
 let solvedRuns = 0;
+let isRefreshing = false;
 
 // Extract puzzle ids
 
@@ -121,20 +122,37 @@ let puzzleObjects = puzzleIds.map((id) => ({
   rated: true,
 }));
 
-//
+// Main game loop
 
-function checkRuns(solvedRuns) {
-  if (solvedRuns === numberOfRuns) {
+async function batchCompletion(index) {
+  if (isRefreshing) return;
+  if (index >= batchPuzzles.length) {
+    isRefreshing = true;
+
+    if (solvedRuns === numberOfRuns) {
+      await solvePuzzle(puzzleObjects);
+      lowestTheme = await getLowestTheme();
+      batchData = await getPuzzle(lowestTheme);
+      batchPuzzles = batchData.puzzles;
+      puzzleIds = batchPuzzles.map((puzzle) => puzzle.puzzle.id);
+      puzzleObjects = puzzleIds.map((id) => ({
+        id: id,
+        win: true,
+        rated: true,
+      }));
+      solvedRuns = 0;
+    } else {
+      solvedRuns++;
+    }
+    isRefreshing = false;
+    loadPuzzle(0);
+    return;
   }
 }
 
-// Main game loop
-
 function loadPuzzle(index) {
   if (index >= batchPuzzles.length) {
-    console.log('Completed full batch, Starting again');
-    solvedRuns++;
-    loadPuzzle(0);
+    batchCompletion(index);
     return;
   }
 
