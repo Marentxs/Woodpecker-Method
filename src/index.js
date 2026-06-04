@@ -10,6 +10,14 @@ const solutionUI = document.getElementById('solution');
 const numberOfPuzzles = 2;
 const numberOfRuns = 2;
 
+let batchData;
+let batchPuzzles;
+let solvedRuns = 0;
+let isRefreshing = false;
+let puzzleIds;
+let puzzleObjects;
+let lowestTheme;
+
 // Make moves from pgn
 
 function pgnHelper(pgn) {
@@ -19,6 +27,28 @@ function pgnHelper(pgn) {
   for (const move of moves) {
     const result = chess.move(move);
   }
+}
+
+// initialization setup
+
+async function initializePuzzles() {
+  lowestTheme = await getLowestTheme();
+  let data = await getPuzzle(lowestTheme);
+
+  batchData = data;
+  batchPuzzles = data.puzzles;
+
+  puzzleIds = batchPuzzles.map((puzzle) => puzzle.puzzle.id);
+  puzzleObjects = puzzleIds.map((id) => ({
+    id: id,
+    win: true,
+    rated: true,
+  }));
+
+  solvedRuns = 0;
+  isRefreshing = false;
+
+  loadPuzzle(0);
 }
 
 // Handle login and auth
@@ -46,7 +76,7 @@ function showAuthenticated() {
   document.getElementById('unauthenticated').style.display = 'none';
   document.getElementById('authenticated').style.display = 'block';
 
-  // functions to fetch dashboard, get lowest, and generate puzzles
+  initializePuzzles();
 }
 
 function showUnauthenticated() {
@@ -101,24 +131,6 @@ async function getLowestTheme() {
   }
   return lowestTheme;
 }
-
-lowestTheme = await getLowestTheme();
-
-// Variables for logic
-
-let batchData = await getPuzzle(lowestTheme);
-let batchPuzzles = batchData.puzzles;
-let solvedRuns = 0;
-let isRefreshing = false;
-
-// Extract puzzle ids
-
-let puzzleIds = batchPuzzles.map((puzzle) => puzzle.puzzle.id);
-let puzzleObjects = puzzleIds.map((id) => ({
-  id: id,
-  win: true,
-  rated: true,
-}));
 
 // Main game loop
 
@@ -199,7 +211,3 @@ function loadPuzzle(index) {
 
   const board = Chessboard('chessboard', config);
 }
-
-// Initialize from first puzzle
-
-loadPuzzle(0);
