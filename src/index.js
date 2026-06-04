@@ -67,11 +67,9 @@ async function getPuzzle(angle) {
   });
 }
 
-async function solvePuzzle(angle) {
-  const nb = numberOfPuzzles;
-
+async function solvePuzzle(solutions) {
   return auth
-    .fetchResponse(`/api/puzzle/batch/${angle}?nb=${nb}`, {
+    .fetchResponse(`/api/puzzle/batch/mix?nb=0`, {
       method: 'POST',
       body: JSON.stringify({
         solutions: solutions,
