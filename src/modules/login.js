@@ -1,7 +1,7 @@
 import { OAuth2AuthCodePKCE } from '@bity/oauth2-auth-code-pkce';
 
 export const lichessHost = 'https://lichess.org';
-export const scopes = [];
+export const scopes = ['puzzle:read', 'puzzle:write'];
 export const clientId = 'lichess-api-demo';
 export const clientUrl = `${location.protocol}//${location.host}/`;
 

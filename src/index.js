@@ -7,8 +7,8 @@ const chess = new Chess();
 const pgnUI = document.getElementById('pgn');
 const solutionUI = document.getElementById('solution');
 
-const numberOfPuzzles = 2;
-const numberOfRuns = 2;
+const numberOfPuzzles = 1;
+const numberOfRuns = 1;
 
 let batchData;
 let batchPuzzles;
@@ -33,12 +33,14 @@ function pgnHelper(pgn) {
 
 async function initializePuzzles() {
   lowestTheme = await getLowestTheme();
+
   let data = await getPuzzle(lowestTheme);
 
   batchData = data;
   batchPuzzles = data.puzzles;
 
   puzzleIds = batchPuzzles.map((puzzle) => puzzle.puzzle.id);
+
   puzzleObjects = puzzleIds.map((id) => ({
     id: id,
     win: true,
@@ -98,9 +100,14 @@ async function getPuzzle(angle) {
 }
 
 async function solvePuzzle(solutions) {
+  console.log('📤 Submitting solutions:', solutions);
+
   return auth
     .fetchResponse(`/api/puzzle/batch/mix?nb=0`, {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
       body: JSON.stringify({
         solutions: solutions,
       }),
@@ -109,6 +116,7 @@ async function solvePuzzle(solutions) {
       if (!response.ok) {
         throw new Error('Request failed');
       }
+      console.log('✅ Solutions submitted successfully');
       return response.json();
     });
 }
@@ -135,7 +143,10 @@ async function getLowestTheme() {
 // Main game loop
 
 async function batchCompletion(index) {
-  if (isRefreshing) return;
+  if (isRefreshing) {
+    return;
+  }
+
   if (index >= batchPuzzles.length) {
     isRefreshing = true;
 
@@ -170,6 +181,7 @@ function loadPuzzle(index) {
 
   let ownMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 === 0);
   let opponentMoves = puzzle.puzzle.solution.filter((move, index) => index % 2 !== 0);
+
   let currentMoveIndex = 0;
 
   pgnHelper(puzzle.game.pgn);
@@ -181,12 +193,8 @@ function loadPuzzle(index) {
       const moveString = move.from.id + move.to.id;
 
       if (moveString === ownMoves[currentMoveIndex]) {
-        console.log('Correct move');
         return true;
       } else {
-        console.log(ownMoves[currentMoveIndex]);
-        console.log(moveString);
-        console.log('Wrong move');
         return false;
       }
     },
@@ -208,6 +216,5 @@ function loadPuzzle(index) {
   };
 
   // Create board with logic
-
   const board = Chessboard('chessboard', config);
 }
