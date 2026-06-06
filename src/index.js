@@ -119,6 +119,9 @@ async function solvePuzzle(solutions) {
       }
       console.log('Solutions submitted successfully');
       return response.json();
+    })
+    .then((data) => {
+      console.log('Updated rating:', data);
     });
 }
 
