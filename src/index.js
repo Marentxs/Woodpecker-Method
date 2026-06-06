@@ -90,8 +90,9 @@ function showUnauthenticated() {
 
 async function getPuzzle(angle) {
   const nb = numberOfPuzzles;
+  const angleFormatted = encodeURIComponent(angle);
 
-  return auth.fetchResponse(`/api/puzzle/batch/${angle}?nb=${nb}`).then((response) => {
+  return auth.fetchResponse(`/api/puzzle/batch/${angleFormatted}?nb=${nb}`).then((response) => {
     if (!response.ok) {
       throw new Error('Request failed');
     }
@@ -100,7 +101,7 @@ async function getPuzzle(angle) {
 }
 
 async function solvePuzzle(solutions) {
-  console.log('📤 Submitting solutions:', solutions);
+  console.log('Submitting solutions:', solutions);
 
   return auth
     .fetchResponse(`/api/puzzle/batch/mix?nb=0`, {
@@ -116,7 +117,7 @@ async function solvePuzzle(solutions) {
       if (!response.ok) {
         throw new Error('Request failed');
       }
-      console.log('✅ Solutions submitted successfully');
+      console.log('Solutions submitted successfully');
       return response.json();
     });
 }
@@ -134,7 +135,7 @@ async function getLowestTheme() {
     let currentPerformance = value.results.performance;
     if (currentPerformance < lowestPerformance) {
       lowestPerformance = value.results.performance;
-      lowestTheme = value.theme;
+      lowestTheme = key;
     }
   }
   return lowestTheme;
