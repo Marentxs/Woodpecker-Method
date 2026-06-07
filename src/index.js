@@ -2,6 +2,7 @@ import { Chess } from 'chess.js';
 import { Chessboard } from '@alepot55/chessboardjs';
 import '@alepot55/chessboardjs/dist/chessboard.css';
 import { Auth } from './modules/login.js';
+import './styles.css';
 
 const chess = new Chess();
 const pgnUI = document.getElementById('pgn');
@@ -56,7 +57,6 @@ async function initializePuzzles() {
 // Handle login and auth
 
 const auth = new Auth();
-const app = document.getElementById('app');
 
 auth.init().then(() => {
   if (auth.me) {

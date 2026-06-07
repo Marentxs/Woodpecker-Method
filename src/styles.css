@@ -13,12 +13,23 @@ body {
   height: 100%;
 }
 
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-family: 'Press Start 2P', cursive;
+  background-color: #5a5a5a;
+  color: #ffffff;
+}
+
 input,
 button,
 textarea,
 select {
   font: inherit;
 }
+
 p,
 h1,
 h2,
@@ -32,4 +43,40 @@ h6 {
 #root,
 #__next {
   isolation: isolate;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+#unauthenticated {
+  display: none;
+}
+
+#authenticated {
+  display: none;
+}
+
+#chessboard {
+  width: 600px;
+}
+
+button {
+  padding: 12px 24px;
+  font-size: 14px;
+  cursor: pointer;
+  background: #c0c0c0;
+  color: #000;
+  border: 3px outset #fff;
+  font-family: 'Press Start 2P', cursive;
+  transition: all 0.1s ease;
+}
+
+button:hover {
+  background: #000080;
+  color: #fff;
+  border: 3px outset #fff;
 }

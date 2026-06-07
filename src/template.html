@@ -4,23 +4,21 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Woodpecker Method</title>
+    <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <div id="app">
       <h1>Woodpecker Method</h1>
 
-      <div id="unauthenticated" style="display: none">
+      <div id="unauthenticated">
         <button id="loginBtn">Login with Lichess</button>
       </div>
 
-      <div id="authenticated" style="display: none">
+      <div id="chessboard"></div>
+
+      <div id="authenticated">
         <button id="logoutBtn">Logout</button>
       </div>
-
-      <div id="chessboard" style="width: 400px"></div>
-
-      <div id="pgn"></div>
-      <div id="solution"></div>
     </div>
   </body>
 </html>
