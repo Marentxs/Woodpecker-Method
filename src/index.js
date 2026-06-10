@@ -79,6 +79,9 @@ function showAuthenticated() {
   document.getElementById('authenticated').style.display = 'block';
 
   initializePuzzles();
+
+  document.getElementById('themeName').textContent = lowestTheme;
+  document.getElementById('currentCycle').textContent = solvedRuns;
 }
 
 function showUnauthenticated() {
