@@ -47,36 +47,62 @@ h6 {
 
 #app {
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-}
-
-#unauthenticated {
-  display: none;
-}
-
-#authenticated {
-  display: none;
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 40px;
+  max-width: 1200px;
+  padding: 20px;
 }
 
 #chessboard {
   width: 600px;
+  flex-shrink: 0;
 }
 
-button {
-  padding: 12px 24px;
-  font-size: 14px;
+#authenticated {
+  display: none;
+  flex-direction: column;
+  gap: 20px;
+  min-width: 280px;
+  max-width: 320px;
+}
+
+#dashboard {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 20px;
+  border: 2px solid #c0c0c0;
+  margin-bottom: 10px;
+}
+
+#dashboard p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+  font-size: 12px;
+}
+
+#themeName {
+  color: #ffff00;
+  text-transform: uppercase;
+}
+
+#logoutBtn {
+  width: 100%;
+}
+
+details {
+  background: rgba(0, 0, 0, 0.3);
+  padding: 15px;
+  border: 2px solid #c0c0c0;
+  margin-top: 10px;
+}
+
+summary {
   cursor: pointer;
-  background: #c0c0c0;
-  color: #000;
-  border: 3px outset #fff;
-  font-family: 'Press Start 2P', cursive;
-  transition: all 0.1s ease;
+  margin-bottom: 10px;
 }
 
-button:hover {
-  background: #000080;
-  color: #fff;
-  border: 3px outset #fff;
+details p {
+  font-size: 10px;
+  line-height: 1.6;
+  margin-top: 10px;
 }
