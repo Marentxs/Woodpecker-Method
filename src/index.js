@@ -78,7 +78,7 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 
 function showAuthenticated() {
   document.getElementById('unauthenticated').style.display = 'none';
-  document.getElementById('authenticated').style.display = 'block';
+  document.getElementById('authenticated').style.display = 'flex';
   document.getElementById('logoutBtn').style.display = 'block';
   document.getElementById('app').style.flexDirection = 'row';
   document.getElementById('chessboardContainer').style.display = 'block';
