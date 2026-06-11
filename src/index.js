@@ -81,6 +81,7 @@ function showAuthenticated() {
   document.getElementById('authenticated').style.display = 'block';
   document.getElementById('logoutBtn').style.display = 'block';
   document.getElementById('app').style.flexDirection = 'row';
+  document.getElementById('chessboardContainer').style.display = 'block';
 
   initializePuzzles();
 
@@ -91,6 +92,7 @@ function showUnauthenticated() {
   document.getElementById('authenticated').style.display = 'none';
   document.getElementById('logoutBtn').style.display = 'none';
   document.getElementById('app').style.flexDirection = 'column';
+  document.getElementById('chessboardContainer').style.display = 'none';
 }
 
 // API endpoint
