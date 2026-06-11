@@ -35,6 +35,8 @@ function pgnHelper(pgn) {
 async function initializePuzzles() {
   lowestTheme = await getLowestTheme();
 
+  document.getElementById('themeName').textContent = lowestTheme;
+
   let data = await getPuzzle(lowestTheme);
 
   batchData = data;
@@ -80,7 +82,6 @@ function showAuthenticated() {
 
   initializePuzzles();
 
-  document.getElementById('themeName').textContent = lowestTheme;
   document.getElementById('currentCycle').textContent = solvedRuns;
 }
 
@@ -160,6 +161,8 @@ async function batchCompletion(index) {
     if (solvedRuns === numberOfRuns) {
       await solvePuzzle(puzzleObjects);
       lowestTheme = await getLowestTheme();
+      document.getElementById('themeName').textContent = lowestTheme;
+
       batchData = await getPuzzle(lowestTheme);
       batchPuzzles = batchData.puzzles;
       puzzleIds = batchPuzzles.map((puzzle) => puzzle.puzzle.id);
@@ -171,6 +174,7 @@ async function batchCompletion(index) {
       solvedRuns = 0;
     } else {
       solvedRuns++;
+      document.getElementById('currentCycle').textContent = solvedRuns;
     }
     isRefreshing = false;
     loadPuzzle(0);
