@@ -15,12 +15,14 @@ body {
 
 body {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
   font-family: 'Press Start 2P', cursive;
   background-color: #5a5a5a;
   color: #ffffff;
+  gap: 30px;
 }
 
 input,
@@ -43,6 +45,10 @@ h6 {
 #root,
 #__next {
   isolation: isolate;
+}
+
+h1 {
+  text-align: center;
 }
 
 #app {
@@ -86,7 +92,11 @@ h6 {
 }
 
 #logoutBtn {
-  width: 100%;
+  width: auto;
+  min-width: 200px;
+  padding: 10px 20px;
+  cursor: pointer;
+  display: none;
 }
 
 details {

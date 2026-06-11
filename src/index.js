@@ -79,6 +79,7 @@ document.getElementById('logoutBtn').addEventListener('click', async () => {
 function showAuthenticated() {
   document.getElementById('unauthenticated').style.display = 'none';
   document.getElementById('authenticated').style.display = 'block';
+  document.getElementById('logoutBtn').style.display = 'block';
 
   initializePuzzles();
 
@@ -88,6 +89,7 @@ function showAuthenticated() {
 function showUnauthenticated() {
   document.getElementById('unauthenticated').style.display = 'block';
   document.getElementById('authenticated').style.display = 'none';
+  document.getElementById('logoutBtn').style.display = 'none';
 }
 
 // API endpoint
