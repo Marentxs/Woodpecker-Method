@@ -80,6 +80,7 @@ function showAuthenticated() {
   document.getElementById('unauthenticated').style.display = 'none';
   document.getElementById('authenticated').style.display = 'block';
   document.getElementById('logoutBtn').style.display = 'block';
+  document.getElementById('app').style.flexDirection = 'row';
 
   initializePuzzles();
 
@@ -87,9 +88,9 @@ function showAuthenticated() {
 }
 
 function showUnauthenticated() {
-  document.getElementById('unauthenticated').style.display = 'block';
   document.getElementById('authenticated').style.display = 'none';
   document.getElementById('logoutBtn').style.display = 'none';
+  document.getElementById('app').style.flexDirection = 'column';
 }
 
 // API endpoint
