@@ -1,12 +1,12 @@
 import { Chess } from 'chess.js';
 import { Chessboard } from '@alepot55/chessboardjs';
 import '@alepot55/chessboardjs/dist/chessboard.css';
+
 import { Auth } from './modules/login.js';
+import { PuzzleManager } from './modules/puzzleManager.js';
 import './styles.css';
 
 const chess = new Chess();
-const pgnUI = document.getElementById('pgn');
-const solutionUI = document.getElementById('solution');
 
 const numberOfPuzzles = 1;
 const numberOfRuns = 1;
@@ -33,11 +33,11 @@ function pgnHelper(pgn) {
 // initialization setup
 
 async function initializePuzzles() {
-  lowestTheme = await getLowestTheme();
+  lowestTheme = await puzzleManager.getLowestTheme();
 
   document.getElementById('themeName').textContent = lowestTheme;
 
-  let data = await getPuzzle(lowestTheme);
+  let data = await puzzleManager.getPuzzle(lowestTheme);
 
   batchData = data;
   batchPuzzles = data.puzzles;
@@ -59,6 +59,7 @@ async function initializePuzzles() {
 // Handle login and auth
 
 const auth = new Auth();
+const puzzleManager = new PuzzleManager(auth, numberOfPuzzles);
 
 auth.init().then(() => {
   if (auth.me) {
@@ -95,64 +96,6 @@ function showUnauthenticated() {
   document.getElementById('chessboardContainer').style.display = 'none';
 }
 
-// API endpoint
-
-async function getPuzzle(angle) {
-  const nb = numberOfPuzzles;
-  const angleFormatted = encodeURIComponent(angle);
-
-  return auth.fetchResponse(`/api/puzzle/batch/${angleFormatted}?nb=${nb}`).then((response) => {
-    if (!response.ok) {
-      throw new Error('Request failed');
-    }
-    return response.json();
-  });
-}
-
-async function solvePuzzle(solutions) {
-  console.log('Submitting solutions:', solutions);
-
-  return auth
-    .fetchResponse(`/api/puzzle/batch/mix?nb=0`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        solutions: solutions,
-      }),
-    })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Request failed');
-      }
-      console.log('Solutions submitted successfully');
-      return response.json();
-    })
-    .then((data) => {
-      console.log('Updated rating:', data);
-    });
-}
-
-async function getLowestTheme() {
-  const days = 30;
-
-  const response = await auth.fetchResponse(`/api/puzzle/dashboard/${days}`);
-
-  const data = await response.json();
-  let lowestPerformance = Infinity;
-  let lowestTheme;
-
-  for (const [key, value] of Object.entries(data.themes)) {
-    let currentPerformance = value.results.performance;
-    if (currentPerformance < lowestPerformance) {
-      lowestPerformance = value.results.performance;
-      lowestTheme = key;
-    }
-  }
-  return lowestTheme;
-}
-
 // Main game loop
 
 async function batchCompletion(index) {
@@ -164,11 +107,11 @@ async function batchCompletion(index) {
     isRefreshing = true;
 
     if (solvedRuns === numberOfRuns) {
-      await solvePuzzle(puzzleObjects);
-      lowestTheme = await getLowestTheme();
+      await puzzleManager.solvePuzzle(puzzleObjects);
+      lowestTheme = await puzzleManager.getLowestTheme();
       document.getElementById('themeName').textContent = lowestTheme;
 
-      batchData = await getPuzzle(lowestTheme);
+      batchData = await puzzleManager.getPuzzle(lowestTheme);
       batchPuzzles = batchData.puzzles;
       puzzleIds = batchPuzzles.map((puzzle) => puzzle.puzzle.id);
       puzzleObjects = puzzleIds.map((id) => ({
