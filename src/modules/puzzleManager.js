@@ -1,25 +1,27 @@
-export class puzzleManager {
+export class PuzzleManager {
   constructor(auth, numberOfPuzzles) {
     this.auth = auth;
     this.numberOfPuzzles = numberOfPuzzles;
   }
 
   async getPuzzle(angle) {
-    const nb = numberOfPuzzles;
+    const nb = this.numberOfPuzzles;
     const angleFormatted = encodeURIComponent(angle);
 
-    return auth.fetchResponse(`/api/puzzle/batch/${angleFormatted}?nb=${nb}`).then((response) => {
-      if (!response.ok) {
-        throw new Error('Request failed');
-      }
-      return response.json();
-    });
+    return this.auth
+      .fetchResponse(`/api/puzzle/batch/${angleFormatted}?nb=${nb}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error('Request failed');
+        }
+        return response.json();
+      });
   }
 
   async solvePuzzle(solutions) {
     console.log('Submitting solutions:', solutions);
 
-    return auth
+    return this.auth
       .fetchResponse(`/api/puzzle/batch/mix?nb=0`, {
         method: 'POST',
         headers: {
@@ -43,7 +45,7 @@ export class puzzleManager {
 
   async getLowestTheme() {
     const days = 30;
-    const response = await auth.fetchResponse(`/api/puzzle/dashboard/${days}`);
+    const response = await this.auth.fetchResponse(`/api/puzzle/dashboard/${days}`);
     const data = await response.json();
 
     let lowestPerformance = Infinity;
