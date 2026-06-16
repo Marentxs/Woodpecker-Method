@@ -28,9 +28,25 @@ export class BatchController {
     }
   }
 
+  spaceCap(str) {
+    let index = -1;
+    for (let i = 0; i < str.length; i++) {
+      if (str[i] === str[i].toUpperCase()) {
+        index = i;
+      }
+    }
+    if (index === -1) return str;
+
+    let part1 = str.slice(0, index);
+    let part2 = str.slice(index);
+    let correctString = part1 + ' ' + part2;
+
+    return correctString;
+  }
+
   async initializePuzzles() {
     this.lowestTheme = await this.puzzleManager.getLowestTheme();
-    document.getElementById('themeName').textContent = this.lowestTheme;
+    document.getElementById('themeName').textContent = this.spaceCap(this.lowestTheme);
 
     let data = await this.puzzleManager.getPuzzle(this.lowestTheme);
     this.batchData = data;
@@ -59,7 +75,7 @@ export class BatchController {
       if (this.solvedRuns === this.numberOfRuns) {
         await this.puzzleManager.solvePuzzle(this.puzzleObjects);
         this.lowestTheme = await this.puzzleManager.getLowestTheme();
-        document.getElementById('themeName').textContent = this.lowestTheme;
+        document.getElementById('themeName').textContent = this.spaceCap(this.lowestTheme);
 
         this.batchData = await this.puzzleManager.getPuzzle(this.lowestTheme);
         this.batchPuzzles = this.batchData.puzzles;
