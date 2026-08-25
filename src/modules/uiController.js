@@ -13,8 +13,9 @@ export class UIController {
     document.getElementById('app').style.flexDirection = 'row';
     document.getElementById('chessboardContainer').style.display = 'block';
 
-    this.batchController.initializePuzzles();
+    document.getElementById('footer').style.display = 'block';
 
+    this.batchController.initializePuzzles();
     document.getElementById('currentCycle').textContent = this.batchController.solvedRuns;
   }
 
@@ -23,6 +24,8 @@ export class UIController {
     document.getElementById('logoutBtn').style.display = 'none';
     document.getElementById('app').style.flexDirection = 'column';
     document.getElementById('chessboardContainer').style.display = 'none';
+
+    document.getElementById('footer').style.display = 'none';
   }
 
   setupEventListeners() {

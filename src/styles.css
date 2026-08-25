@@ -192,3 +192,21 @@ button:hover {
   background: #3a2210;
   transform: scale(1.02);
 }
+
+.footer {
+  margin-top: 20px;
+}
+
+.footer a {
+  color: #f5e6c4;
+  background: #5c3a1e;
+  padding: 10px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.footer a:hover {
+  background: #3a2210;
+}
