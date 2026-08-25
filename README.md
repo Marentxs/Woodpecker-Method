@@ -2,6 +2,9 @@
 
 🔗 **Live Demo**:
 
+<img width="1580" height="965" alt="image" src="https://github.com/user-attachments/assets/9ab768a0-c985-4f3e-9eac-7463c40adb5a" />
+
+
 A dynamic chess puzzle training application that integrates with the Lichess API.  
 It identifies your weakest puzzle theme and presents a batch of puzzles from that theme. You solve the same batch repeatedly over multiple runs – following the **Woodpecker Method** – to build pattern recognition, then the app submits your results to Lichess and automatically rotates to the next weakest theme.
 
