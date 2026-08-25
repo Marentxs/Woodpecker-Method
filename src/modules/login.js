@@ -12,6 +12,7 @@ export class Auth {
     clientId,
     scopes,
     redirectUrl: clientUrl,
+    storage: sessionStorage,
     onAccessTokenExpiry: (refreshAccessToken) => refreshAccessToken(),
     onInvalidGrant: console.warn,
   });
@@ -45,9 +46,18 @@ export class Auth {
 
   async logout() {
     if (this.me) {
-      await this.me.httpClient(`${lichessHost}/api/token`, { method: 'DELETE' });
+      try {
+        await this.me.httpClient(`${lichessHost}/api/token`, { method: 'DELETE' });
+      } catch (e) {
+        console.warn('Token revocation failed, but clearing local state anyway.', e);
+      }
     }
-    localStorage.clear();
+    // Instead of clear(), remove only OAuth-specific keys
+    const oauthKey = 'oauth2authcodepkce-state';
+    if (localStorage.getItem(oauthKey) !== null) {
+      localStorage.removeItem(oauthKey);
+    }
+
     this.me = undefined;
   }
 
@@ -72,9 +82,9 @@ export class Auth {
   fetchResponse = async (path, config = {}) => {
     const res = await (this.me?.httpClient || window.fetch)(`${lichessHost}${path}`, config);
     if (res.error || !res.ok) {
-      const err = `${res.error} ${res.status} ${res.statusText}`;
-      alert(err);
-      throw err;
+      const errorBody = await res.text();
+      console.error(`API Error ${res.status}:`, errorBody);
+      throw new Error(`Request to ${path} failed. Please check the console for details.`);
     }
     return res;
   };

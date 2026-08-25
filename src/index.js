@@ -8,8 +8,8 @@ import { BatchController } from './modules/batchController.js';
 import { UIController } from './modules/uiController.js';
 import './styles.css';
 
-const numberOfPuzzles = 1;
-const numberOfRuns = 1;
+const numberOfPuzzles = 10;
+const numberOfRuns = 10;
 
 const auth = new Auth();
 const puzzleManager = new PuzzleManager(auth, numberOfPuzzles);

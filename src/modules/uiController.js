@@ -32,6 +32,7 @@ export class UIController {
 
     document.getElementById('logoutBtn').addEventListener('click', async () => {
       await this.auth.logout();
+      location.reload();
     });
   }
 }

@@ -72,7 +72,7 @@ export class BatchController {
     if (index >= this.batchPuzzles.length) {
       this.isRefreshing = true;
 
-      if (this.solvedRuns === this.numberOfRuns) {
+      if (this.solvedRuns === this.numberOfRuns - 1) {
         await this.puzzleManager.solvePuzzle(this.puzzleObjects);
         this.lowestTheme = await this.puzzleManager.getLowestTheme();
         document.getElementById('themeName').textContent = this.spaceCap(this.lowestTheme);
