@@ -1,6 +1,6 @@
 # Chess Puzzle Trainer (Woodpecker Method)
 
-🔗 **Live Demo**:
+🔗 **Live Demo**: https://marentxs.github.io/Woodpecker-Method/
 
 <img width="1580" height="965" alt="image" src="https://github.com/user-attachments/assets/9ab768a0-c985-4f3e-9eac-7463c40adb5a" />
 
